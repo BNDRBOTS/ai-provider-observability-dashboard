@@ -1,0 +1,24 @@
+[build]
+  command = "npm run build && npm run export"
+  publish = "out"
+  functions = "netlify/functions"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+[[schedule]]
+  name = "scheduled-data-fetch"
+  cron = "0 0,12 * * *"
+  function = "scheduled-data-fetch"
