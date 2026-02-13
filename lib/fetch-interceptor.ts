@@ -31,7 +31,18 @@ export function installFetchInterceptor() {
   
   window.fetch = async function(...args: Parameters<typeof fetch>): Promise<Response> {
     const [resource, init] = args
-    const url = typeof resource === 'string' ? resource : resource.url
+
+    let url: string
+    if (typeof resource === 'string') {
+      url = resource
+    } else if (resource instanceof URL) {
+      url = resource.toString()
+    } else if (typeof resource === 'object' && resource !== null && 'url' in resource) {
+      url = (resource as Request).url
+    } else {
+      url = String(resource)
+    }
+
     const startTime = Date.now()
     
     const provider = extractProviderFromURL(url)
